@@ -5,6 +5,7 @@
   --color: #00eeff;
   --color2: #7db633;
   --color3: #F00;
+  --color4: rgb(138, 83, 155);
 
 
   --background: #ffe4e0; 
@@ -74,27 +75,26 @@ h1 {
   @include commons;
   font-size: 42px;
   font-weight: bold;
-  color: #f1da8d;
+  color: var(--color4);
 }
 
 h2 {
   @include commons;
   font-size: 32px;
   font-weight: normal;
-  color: #00ff22;
+  color: var(--color3);
 }
 
 h3 {
   @include commons;
   font-size: 24px;
   font-weight: normal;
-  color: #f00a0a;
-   //var(--color2);
+  color: var(--color);
 }
 
 h4 {
   @include commons;
   font-size: 20px;
   font-weight: normal;
-  color: #9192d3;
+  color: var(--color2);
 }
