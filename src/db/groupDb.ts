@@ -1,15 +1,53 @@
 import { Group } from './entity/Group.entity';
+import { Student } from './entity/Student.entity';
 import AppDataSource from './AppDataSource';
 import type GroupInterface from '@/types/GroupInterface';
+import type StudentInterface from '@/types/StudentInterface';
 
 const groupRepository = AppDataSource.getRepository(Group);
+const studentRepository = AppDataSource.getRepository(Student);
 
 /**
  * Получение групп
  * @returns  Promise<GroupInterface[]>
  */
 export const getGroupsDb = async (): Promise<GroupInterface[]> => {
-  return await groupRepository.find();
+  const groups = await groupRepository.find();
+  
+  const groupsWithStudents = await Promise.all(
+    groups.map(async (group) => {
+      const students = await studentRepository.find({
+        where: { groupId: group.id }
+      });
+      return {
+        ...group,
+        students
+      };
+    })
+  );
+  
+  return groupsWithStudents;
+};
+
+/**
+ * Получение группы со студентами
+ * @returns  Promise<GroupInterface>
+ */
+export const getGroupWithStudentsDb = async (groupId: number): Promise<GroupInterface | null> => {
+  const group = await groupRepository.findOne({
+    where: { id: groupId }
+  });
+  
+  if (!group) return null;
+  
+  const students = await studentRepository.find({
+    where: { groupId: group.id }
+  });
+  
+  return {
+    ...group,
+    students
+  };
 };
 
 /**

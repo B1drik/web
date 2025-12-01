@@ -15,3 +15,19 @@ export const getGroupsApi = async (): Promise<GroupInterface[]> => {
     return [] as GroupInterface[];
   }
 };
+
+export const getGroupWithStudentsApi = async (groupId: number): Promise<GroupInterface> => {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API}groups/${groupId}/students`);
+
+    if (!response.ok) {
+      throw new Error(`Ошибка HTTP: ${response.status}${response.statusText}`);
+    }
+    const group = await response.json() as GroupInterface;
+    return group;
+  }
+  catch (err) {
+    console.log('>>> getGroupWithStudentsApi', err);
+    throw err;
+  }
+};

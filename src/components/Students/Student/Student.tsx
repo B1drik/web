@@ -19,6 +19,9 @@ const Student = ({ student, onDelete }: Props): React.ReactElement => {
       <Link href={`/students/${student.id}`} className={styles.link}>
         {`${student.id || 'xxxx'} - ${student.lastName} ${student.firstName} ${student.middleName}`}
       </Link>
+      <div className={styles.groupInfo}>
+        {student.group ? `Группа: ${student.group.name}` : `ID группы: ${student.groupId}`}
+      </div>
       <button onClick={onDeleteHandler}>Удалить</button>
     </div>
   );
