@@ -2,25 +2,25 @@
 
 :root {
 
-  --color: #00eeff;
-  --color2: #7db633;
-  --color3: #F00;
-  --color4: rgb(138, 83, 155);
+  --color: #2563eb; /* синий основной */
+  --color2: #16a34a; /* зеленый для успехов */
+  --color3: #dc2626; /* красный для ошибок */
+  --color4: #7c3aed; /* фиолетовый для заголовков */
 
 
-  --background: #ffe4e0; 
-  --background2: #a55ebb;
-  --background3: #8f4949;
+  --background: #f8fafc; /* светло-серый фон */
+  --background2: #1e40af; /* темно-синий для header */
+  --background3: #e5e7eb; /* серый для границ */
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --color: #d8d8d8;
-    --color2: #000;
-    --color3: #F00;
-    --background: #a03b3b;
-    --background2: #51aa6b;
-    --background3: #cdd676;
+    --color: #e2e8f0;
+    --color2: #10b981;
+    --color3: #ef4444;
+    --background: #0f172a;
+    --background2: #1e293b;
+    --background3: #374151;
   }
 }
 

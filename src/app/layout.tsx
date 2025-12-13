@@ -1,4 +1,5 @@
 import { dehydrate } from '@tanstack/react-query';
+import { cookies } from 'next/headers';
 import 'reflect-metadata';
 import TanStackQuery from '@/containers/TanStackQuery';
 import queryClient from '@/api/reactQueryClient';
@@ -12,6 +13,8 @@ import type { Metadata } from 'next';
 import '@/styles/globals.scss';
 import { META_DESCRIPTION, META_TITLE } from '@/constants/meta';
 import { getStudentsApi } from '@/api/studentsApi';
+import { verifyAccessToken } from '@/utils/jwt';
+// import UserInterface from '@/types/UserInterface';
 
 export const metadata: Metadata = {
   title: META_TITLE,
@@ -19,26 +22,34 @@ export const metadata: Metadata = {
 };
 
 const RootLayout = async ({ children }: Readonly<{ children: React.ReactNode }>): Promise<React.ReactElement> => {
-  // выполняется на сервере - загрузка групп
-  await queryClient.prefetchQuery({
-    queryKey: ['groups'],
-    queryFn: getGroupsApi,
-  });
+  const cookieStore = await cookies();
 
-  // выполняется на сервере - загрузка студентов
+  const accessToken = cookieStore.get('accessToken')?.value;
+
+  const userFromServer = verifyAccessToken(accessToken);
+
+  // Загрузка данных студентов на сервере
   await queryClient.prefetchQuery({
     queryKey: ['students'],
     queryFn: getStudentsApi,
   });
 
-  // дегидрация состояния
+  // Загрузка данных групп на сервере
+  await queryClient.prefetchQuery({
+    queryKey: ['groups'],
+    queryFn: getGroupsApi,
+  });
+
+  // Подготовка состояния для клиента
   const state = dehydrate(queryClient, { shouldDehydrateQuery: () => true });
 
   return (
     <TanStackQuery state={state}>
       <html lang="ru">
         <body>
-          <Header />
+          {/* eslint-disable-next-line @typescript-eslint/ban-ts-comment */}
+          {/* @ts-expect-error */}
+          <Header userFromServer={userFromServer} />
           <Main>
             <>{children}</>
           </Main>
