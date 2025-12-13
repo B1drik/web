@@ -7,10 +7,10 @@ import { User } from './entity/User.entity';
 const timeout = 30000;
 
 const config: DataSourceOptions = {
-  ...(process.env.POSTGRES
+  ...(process.env.DATABASE_URL
     ? {
       type: 'postgres',
-      url: process.env.POSTGRES,
+      url: process.env.DATABASE_URL,
       ssl: true,
       connectTimeoutMS: timeout,
       extra: {
