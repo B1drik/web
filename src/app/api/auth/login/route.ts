@@ -3,13 +3,12 @@ import bcrypt from 'bcryptjs';
 import { signJwt } from '@/utils/jwt';
 import AppDataSource from '@/db/AppDataSource';
 import { User } from '@/db/entity/User.entity';
+import { dbInit } from '@/db/AppDataSource';
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     // Инициализируем соединение с базой
-    if (!AppDataSource.isInitialized) {
-      await AppDataSource.initialize();
-    }
+    await dbInit();
 
     const body = await request.json();
     const { email, password } = body ?? {};

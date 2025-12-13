@@ -1,7 +1,9 @@
 import { getStudentsDb, addStudentDb } from '@/db/studentDb';
 import { type NextApiRequest } from 'next/types';
+import { dbInit } from '@/db/AppDataSource';
 
 export async function GET(): Promise<Response> {
+  await dbInit();
   const students = await getStudentsDb();
 
   return new Response(JSON.stringify(students), {
@@ -12,6 +14,7 @@ export async function GET(): Promise<Response> {
 };
 
 export async function POST(req: NextApiRequest): Promise<Response> {
+  await dbInit();
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const student = await req.json();

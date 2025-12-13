@@ -2,7 +2,8 @@ import type GroupInterface from '@/types/GroupInterface';
 
 export const getGroupsApi = async (): Promise<GroupInterface[]> => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API}groups`);
+    const apiUrl = process.env.NEXT_PUBLIC_API || 'http://localhost:3000/api/';
+    const response = await fetch(`${apiUrl}groups`);
 
     if (!response.ok) {
       throw new Error(`Ошибка HTTP: ${response.status}${response.statusText}`);
@@ -18,7 +19,8 @@ export const getGroupsApi = async (): Promise<GroupInterface[]> => {
 
 export const getGroupWithStudentsApi = async (groupId: number): Promise<GroupInterface> => {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API}groups/${groupId}/students`);
+    const apiUrl = process.env.NEXT_PUBLIC_API || 'http://localhost:3000/api/';
+    const response = await fetch(`${apiUrl}groups/${groupId}/students`);
 
     if (!response.ok) {
       throw new Error(`Ошибка HTTP: ${response.status}${response.statusText}`);
