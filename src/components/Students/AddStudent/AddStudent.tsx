@@ -34,7 +34,7 @@ const AddStudent = forwardRef<AddStudentRef, Props>(({ onAdd }, ref): React.Reac
 
   return (
     <div className={styles.AddStudent}>
-      <h2>Добавления студента</h2>
+      <h2>Добавление Студентов</h2>
 
       <form onSubmit={handleSubmit(onSubmit)}>
 

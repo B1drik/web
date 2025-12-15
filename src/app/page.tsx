@@ -1,12 +1,15 @@
+import BarChart from '@/components/BarChart/BarChart';
 import Page from '@/components/layout/Page/Page';
 
 const HomePage = (): React.ReactNode => {
   return (
     <Page>
-      <h1>Page</h1>
-      <h2>Заголовок 2</h2>
-      <h3>Заголовок 3</h3>
-      <h4>Заголовок 4</h4>
+      <h2>Диаграмма пользователей</h2>
+
+      <BarChart
+        dimensions={{ width: 700, height: 450 }}
+        color="steelblue"
+      />
     </Page>
   );
 };
