@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import type UserInterface from '@/types/UserInterface';
 import { useAuth } from '@/hooks/useAuth';
@@ -20,8 +21,9 @@ const Profile = ({
 
   const getUser = (): UserInterface | null | undefined => user === undefined ? userFromServer : user;
 
-  const logoutHandler = (e: React.MouseEvent<HTMLElement>): void => {
-    e.preventDefault();
+
+  const logoutHandler = (e?: React.MouseEvent<HTMLElement>): void => {
+    if (e) e.preventDefault();
 
     const logout = async (): Promise<void> => {
       try {
@@ -30,6 +32,8 @@ const Profile = ({
         });
 
         if (response.ok) {
+          // Очищаем localStorage
+          localStorage.removeItem('accessToken');
           router.push('/login');
           setUser(null);
         }
