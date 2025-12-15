@@ -1,17 +1,30 @@
 .Menu {
   display: flex;
-  background-color: var(--background2);
-  justify-content: flex-start;
-  gap: 40px;
+  gap: 30px;
   align-items: center;
-  font-size: 18px;
-  color: var(--color);
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.menuItem {
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  
   a {
     color: var(--color);
     text-decoration: none;
   }
+  
+  &:hover {
+    background-color: var(--background3);
+  }
 }
 
 .linkActive {
-  text-decoration: underline;
+  background-color: var(--accent-color);
+  
+  a {
+    color: white;
+  }
 }

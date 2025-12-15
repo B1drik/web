@@ -2,12 +2,15 @@
 
 .Main {
   display: flex;
-  flex-direction: column;
-  min-height: calc(100vh - 180px);
-  padding: 30px main.$webSidePadding;
-  background-color: var(--background);
+  min-height: calc(100vh - 140px);
+  padding: 40px main.$webSidePadding;
+  background: var(--background1);
+  gap: 30px;
+  align-items: flex-start;
+}
 
-  @media #{main.$mob} {
-    padding: 20px main.$mobSidePadding;
-  }
+.content {
+  flex: 1;
+  max-width: 1200px;
+  margin: 0 auto;
 }

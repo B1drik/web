@@ -4,14 +4,29 @@ import AppDataSource from './AppDataSource';
 import type GroupInterface from '@/types/GroupInterface';
 import type StudentInterface from '@/types/StudentInterface';
 
-const groupRepository = AppDataSource.getRepository(Group);
-const studentRepository = AppDataSource.getRepository(Student);
+// Получаем репозитории только после инициализации DataSource
+const getGroupRepository = () => {
+  if (!AppDataSource.isInitialized) {
+    throw new Error('DataSource is not initialized. Call dbInit() first.');
+  }
+  return AppDataSource.getRepository(Group);
+};
+
+const getStudentRepository = () => {
+  if (!AppDataSource.isInitialized) {
+    throw new Error('DataSource is not initialized. Call dbInit() first.');
+  }
+  return AppDataSource.getRepository(Student);
+};
 
 /**
  * Получение групп
  * @returns  Promise<GroupInterface[]>
  */
 export const getGroupsDb = async (): Promise<GroupInterface[]> => {
+  const groupRepository = getGroupRepository();
+  const studentRepository = getStudentRepository();
+  
   const groups = await groupRepository.find();
   
   const groupsWithStudents = await Promise.all(
@@ -34,6 +49,9 @@ export const getGroupsDb = async (): Promise<GroupInterface[]> => {
  * @returns  Promise<GroupInterface>
  */
 export const getGroupWithStudentsDb = async (groupId: number): Promise<GroupInterface | null> => {
+  const groupRepository = getGroupRepository();
+  const studentRepository = getStudentRepository();
+  
   const group = await groupRepository.findOne({
     where: { id: groupId }
   });
@@ -55,6 +73,7 @@ export const getGroupWithStudentsDb = async (groupId: number): Promise<GroupInte
  * @returns  Promise<GroupInterface>
  */
 export const addGroupsDb = async (groupFields: Omit<GroupInterface, 'id'>): Promise<GroupInterface> => {
+  const groupRepository = getGroupRepository();
   const group = new Group();
   const newGroup = await groupRepository.save({
     ...group,

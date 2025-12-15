@@ -1,18 +1,26 @@
 'use client';
 
+import { useRef } from 'react';
 import useStudents from '@/hooks/useStudents';
 import type StudentInterface from '@/types/StudentInterface';
 import styles from './Students.module.scss';
 import Student from './Student/Student';
-import AddStudent, { type FormFields } from './AddStudent/AddStudent';
+import AddStudent, { type FormFields, type AddStudentRef } from './AddStudent/AddStudent';
 import { v4 as uuidv4 } from 'uuid';
 
 const Students = (): React.ReactElement => {
+  const addStudentRef = useRef<AddStudentRef>(null);
+
   const {
     students,
     deleteStudentMutate,
     addStudentMutate,
-  } = useStudents();
+  } = useStudents({
+    onAddSuccess: () => {
+      alert('Студент успешно добавлен!');
+      addStudentRef.current?.resetForm();
+    },
+  });
 
   /**
    * Удаление студента - обработчик события нажатия "удалить"
@@ -44,7 +52,7 @@ const Students = (): React.ReactElement => {
 
   return (
     <div className={styles.Students}>
-      <AddStudent onAdd={onAddHandler} />
+      <AddStudent ref={addStudentRef} onAdd={onAddHandler} />
 
       {students.map((student: StudentInterface) => (
         <Student

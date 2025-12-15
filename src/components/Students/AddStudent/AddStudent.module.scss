@@ -1,46 +1,23 @@
-.AddStudent {
-  margin-bottom: 20px;
-  width: 300px;
+$width: 400px;
 
-  h2 {
-    margin-bottom: 15px;
-    font-size: 18px;
+.AddStudent {
+  margin-bottom: 30px;
+  width: 400px;
+
+  input {
+    width: calc($width - 8px);
   }
+
+  input[type=submit] {
+    width: $width;
+  }
+
 
   form {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 15px;
   }
 
-  input {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 14px;
-    width: 100%;
-
-    &::placeholder {
-      color: #999;
-    }
-  }
-
-  input[type="submit"] {
-    background: #007bff;
-    color: white;
-    border: none;
-    padding: 10px;
-    cursor: pointer;
-    margin-top: 5px;
-
-    &:hover {
-      background: #0056b3;
-    }
-  }
-
-  div {
-    color: red;
-    font-size: 12px;
-    margin-top: -5px;
-  }
 }
+

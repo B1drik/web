@@ -1,11 +1,18 @@
 @use '../../../styles/main';
 
 .Footer {
-  height: 70px;
+  height: 80px;
   background-color: var(--background3);
   color: var(--color2);
   align-items: center;
   display: flex;
   justify-content: center;
   padding: 0 main.$webSidePadding;
+  border-top: 1px solid var(--border-color);
+  font-size: 25px;
+  font-weight: 500;
+}
+
+.Copyright {
+  opacity: 0.9;
 }

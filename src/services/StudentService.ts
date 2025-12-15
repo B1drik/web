@@ -31,12 +31,21 @@ export class StudentService {
   }
 
   async addStudent(studentFields: Omit<StudentInterface, 'id'>): Promise<StudentInterface> {
-    const student = new Student();
-    const newStudent = await this.repository.save({
-      ...student,
-      ...studentFields,
+    // Используем insert, чтобы избежать построения графа зависимостей (циклы при save)
+    const insertResult = await this.repository.insert({
+      firstName: studentFields.firstName,
+      lastName: studentFields.lastName,
+      middleName: studentFields.middleName,
+      contacts: studentFields.contacts ?? '',
+      groupId: studentFields.groupId,
+      uuid: studentFields.uuid,
     });
-    return newStudent;
+
+    const newId = insertResult.identifiers[0]?.id;
+    return await this.repository.findOne({
+      where: { id: newId },
+      relations: ['group'],
+    }) as StudentInterface;
   }
 
   async addRandomStudents(amount: number = 10): Promise<StudentInterface[]> {
@@ -60,6 +69,4 @@ export class StudentService {
 }
 
 export const studentService = new StudentService();
-
-
 

@@ -28,19 +28,19 @@ const RootLayout = async ({ children }: Readonly<{ children: React.ReactNode }>)
 
   const userFromServer = verifyAccessToken(accessToken);
 
-  // Загрузка данных студентов на сервере
+  // выполняется на сервере - загрузка студентов
   await queryClient.prefetchQuery({
     queryKey: ['students'],
     queryFn: getStudentsApi,
   });
 
-  // Загрузка данных групп на сервере
+  // выполняется на сервере - загрузка групп
   await queryClient.prefetchQuery({
     queryKey: ['groups'],
     queryFn: getGroupsApi,
   });
 
-  // Подготовка состояния для клиента
+  // дегидрация состояния
   const state = dehydrate(queryClient, { shouldDehydrateQuery: () => true });
 
   return (

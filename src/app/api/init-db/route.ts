@@ -1,7 +1,9 @@
 import { addGroupsDb } from '@/db/groupDb';
 import { addStudentDb } from '@/db/studentDb';
+import { dbInit } from '@/db/AppDataSource';
 
 export async function GET(): Promise<Response> {
+  await dbInit();
   const newStudent = await addStudentDb({
     firstName: 'fname',
     lastName: 'lname',

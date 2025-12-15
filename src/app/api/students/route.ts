@@ -1,31 +1,46 @@
+import { NextResponse, type NextRequest } from 'next/server';
 import { getStudentsDb, addStudentDb } from '@/db/studentDb';
-import { type NextApiRequest } from 'next/types';
 import { dbInit } from '@/db/AppDataSource';
 
-export async function GET(): Promise<Response> {
-  await dbInit();
-  const students = await getStudentsDb();
+export async function GET(): Promise<NextResponse> {
+  try {
+    await dbInit();
+    const students = await getStudentsDb();
 
-  return new Response(JSON.stringify(students), {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-};
+    return NextResponse.json(students, {
+      status: 200,
+    });
+  } catch (error) {
+    console.error('Error in /api/students GET:', error);
+    return NextResponse.json(
+      { 
+        error: 'Internal Server Error',
+        message: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 },
+    );
+  }
+}
 
-export async function POST(req: NextApiRequest): Promise<Response> {
-  await dbInit();
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const student = await req.json();
-  delete student['id'];
-  const newStudent = await addStudentDb(student);
+export async function POST(req: NextRequest): Promise<NextResponse> {
+  try {
+    await dbInit();
+    const student = await req.json();
+    delete student['id'];
+    const newStudent = await addStudentDb(student);
 
-  console.log(newStudent);
-  return new Response(JSON.stringify(newStudent), {
-    status: 201,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+    console.log(newStudent);
+    return NextResponse.json(newStudent, {
+      status: 201,
+    });
+  } catch (error) {
+    console.error('Error in /api/students POST:', error);
+    return NextResponse.json(
+      { 
+        error: 'Internal Server Error',
+        message: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 },
+    );
+  }
 };

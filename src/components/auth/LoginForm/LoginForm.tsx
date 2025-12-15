@@ -10,9 +10,7 @@ type LoginFormValues = {
   password: string;
 };
 
-// Компонент формы авторизации
 const LoginForm = (): ReactNode => {
-  // Состояние для ошибок и успехов
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const { setUser } = useAuth();
@@ -28,13 +26,11 @@ const LoginForm = (): ReactNode => {
     },
   });
 
-  // Обработчик отправки формы
   const onSubmit = async (values: LoginFormValues): Promise<void> => {
     setError(null);
     setSuccess(null);
 
     try {
-      // Отправка данных на сервер
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -49,7 +45,6 @@ const LoginForm = (): ReactNode => {
         throw new Error(data?.message ?? 'Ошибка авторизации');
       }
 
-      // Сохранение токена
       window.localStorage.setItem('accessToken', data.token);
       setSuccess('Авторизация успешна! Токен сохранён в localStorage.');
     }

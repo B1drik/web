@@ -6,8 +6,11 @@ import { User } from './entity/User.entity';
 
 const timeout = 30000;
 
+const usingPostgres = !!process.env.POSTGRES;
+const isProd = process.env.NODE_ENV === 'production';
+
 const config: DataSourceOptions = {
-  ...(process.env.POSTGRES
+  ...(usingPostgres
     ? {
       type: 'postgres',
       url: process.env.POSTGRES,
@@ -24,9 +27,12 @@ const config: DataSourceOptions = {
       type: 'sqlite',
       database: process.env.DB ?? './db/vki-web.db',
     }),
-  synchronize: process.env.NODE_ENV !== 'production',
-  migrationsRun: process.env.NODE_ENV === 'production',
-  logging: false,
+  // Для Neon на Vercel включаем synchronize (миграций нет, иначе "relation does not exist")
+  // Если позже появятся миграции — можно отключить синхронизацию и включить migrationsRun
+  synchronize: usingPostgres ? true : !isProd,
+  migrationsRun: usingPostgres ? false : isProd,
+  logging: process.env.NODE_ENV === 'development',
+  // Используем прямые ссылки на классы - это работает и в production
   entities: [Student, Group, User],
 };
 
@@ -40,8 +46,11 @@ export const dbInit = async (): Promise<void> => {
     }
     await AppDataSource.initialize();
     console.log('AppDataSource.initialize');
-  } catch (error) {
-    console.log(error);
+  }
+  catch (error) {
+    console.error('Database initialization error:', error);
+    // Пробрасываем ошибку дальше, чтобы API route мог её обработать
+    throw error;
   }
 };
 

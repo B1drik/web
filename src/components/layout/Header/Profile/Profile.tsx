@@ -10,7 +10,6 @@ interface Props {
   userFromServer?: UserInterface;
 }
 
-// Компонент профиля пользователя
 const Profile = ({
   userFromServer,
 }: Props): React.ReactElement => {
@@ -19,17 +18,13 @@ const Profile = ({
 
   const { user, setUser } = useAuth();
 
-  // Получение пользователя (из состояния или с сервера)
   const getUser = (): UserInterface | null | undefined => user === undefined ? userFromServer : user;
 
-  // Обработчик выхода из системы
-  // Обработчик выхода из системы
   const logoutHandler = (e: React.MouseEvent<HTMLElement>): void => {
     e.preventDefault();
 
     const logout = async (): Promise<void> => {
       try {
-        // Запрос на выход
         const response = await fetch('/api/auth/logout', {
           method: 'POST',
         });

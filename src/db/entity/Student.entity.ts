@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
+import type { Group } from './Group.entity';
 
-@Entity()
+@Entity('student')
 export class Student {
   @PrimaryGeneratedColumn()
   id!: number;
@@ -23,7 +24,9 @@ export class Student {
   @Column()
   groupId!: number;
 
-  @ManyToOne('Group', { nullable: true })
+  // Используем функцию-стрелку для ленивой загрузки Group
+  // Это работает в production, так как TypeORM вызывает функцию во время выполнения
+  @ManyToOne(() => require('./Group.entity').Group, { nullable: true, cascade: false })
   @JoinColumn({ name: 'groupId' })
-  group?: any;
+  group?: Group;
 }

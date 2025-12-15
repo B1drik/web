@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import type { Student } from './Student.entity';
 
-@Entity()
+@Entity('group')
 export class Group {
   @PrimaryGeneratedColumn()
   id!: number;
@@ -11,6 +12,8 @@ export class Group {
   @Column()
   contacts!: string;
 
-  @OneToMany('Student', 'group')
-  students!: any[];
+  // Используем функцию-стрелку для ленивой загрузки Student
+  // Это работает в production, так как TypeORM вызывает функцию во время выполнения
+  @OneToMany(() => require('./Student.entity').Student, (student: Student) => student.group, { cascade: false })
+  students!: Student[];
 }

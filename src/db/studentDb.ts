@@ -3,13 +3,20 @@ import type StudentInterface from '@/types/StudentInterface';
 import getRandomFio from '@/utils/getRandomFio';
 import AppDataSource from './AppDataSource';
 
-const studentRepository = AppDataSource.getRepository(Student);
+// Получаем репозиторий только после инициализации DataSource
+const getStudentRepository = () => {
+  if (!AppDataSource.isInitialized) {
+    throw new Error('DataSource is not initialized. Call dbInit() first.');
+  }
+  return AppDataSource.getRepository(Student);
+};
 
 /**
  * Получение студентов
  * @returns Promise<StudentInterface[]>
  */
 export const getStudentsDb = async (): Promise<StudentInterface[]> => {
+  const studentRepository = getStudentRepository();
   return await studentRepository.find({
     relations: ['group']
   });
@@ -21,6 +28,7 @@ export const getStudentsDb = async (): Promise<StudentInterface[]> => {
  * @returns Promise<number>
  */
 export const deleteStudentDb = async (studentId: number): Promise<number> => {
+  const studentRepository = getStudentRepository();
   await studentRepository.delete(studentId);
   return studentId;
 };
@@ -31,15 +39,28 @@ export const deleteStudentDb = async (studentId: number): Promise<number> => {
  * @returns Promise<StudentInterface>
  */
 export const addStudentDb = async (studentFields: Omit<StudentInterface, 'id'>): Promise<StudentInterface> => {
-  const student = new Student();
-  const newStudent = await studentRepository.save({
-    ...student,
-    ...studentFields,
-  });
+  const studentRepository = getStudentRepository();
   
+  // Создаем студента только с необходимыми полями, без связанных объектов
+  const studentData: any = {
+    firstName: studentFields.firstName,
+    lastName: studentFields.lastName,
+    middleName: studentFields.middleName,
+    contacts: studentFields.contacts || '',
+    groupId: studentFields.groupId,
+  };
+  
+  if (studentFields.uuid) {
+    studentData.uuid = studentFields.uuid;
+  }
+
+  // insert, чтобы избежать построения графа зависимостей (циклы при save)
+  const insertResult = await studentRepository.insert(studentData);
+  const newId = insertResult.identifiers[0]?.id;
+
   // Загружаем студента с группой для возврата полных данных
   return await studentRepository.findOne({
-    where: { id: newStudent.id },
+    where: { id: newId },
     relations: ['group']
   }) as StudentInterface;
 };
