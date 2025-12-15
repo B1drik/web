@@ -6,6 +6,22 @@
     border-bottom: var(--color) solid 1px;
   }
 
+  .logoutButton {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    text-decoration: none;
+    border-bottom: var(--color) solid 1px;
+    font-size: inherit;
+    font-family: inherit;
+    padding: 0;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+
   @media #{main.$mob} {
     font-size: main.vwMax(15px);
   }
